@@ -1,0 +1,101 @@
+﻿@model IEnumerable<DotNet_Bookstore.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+@section Styles
+{
+<link rel="stylesheet" href="~/css/dataTables.dataTables.min.css" />
+}
+
+<h1>Books</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table" id="bookTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.Image) *@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MatureContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @if (item.Image != null)
+                    {
+                        <img src="~/img/books/@item.Image" alt="Book Cover" class="img-fluid" id="book-img" />
+                    }
+                    else
+                    {
+                        <img src="~/img/books/bookcover-placeholder.jpg" alt="Book Cover" class="img-fluid" id="book-img" />
+                    }
+                    @* @Html.DisplayFor(modelItem => item.Image) *@
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MatureContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@* Section for page-specific JavaScript *@
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#bookTable').DataTable({
+                "columnDefs": [
+                    {
+                        "type": "num-fmt",  // Use num-fmt to correctly sort decimals
+                        "targets": [3]      // Price column (index 3) will be treated as numeric
+                    },
+                    {
+                        "orderable": false,  // Disable sorting for the Image column (index 2)
+                        "targets": [2]       // Image column is the 3rd column (index 2)
+                    },
+                    {
+                        "orderable": false,  // Disable sorting for the MatureContent column (index 4)
+                        "targets": [4]       // MatureContent column is the 3rd column (index 2)
+                    }
+                ]
+            });
+        });
+    </script>
+}
